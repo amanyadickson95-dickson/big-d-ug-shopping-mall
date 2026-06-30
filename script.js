@@ -43,6 +43,51 @@ let structuralDatabase = [
             "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500",
             "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500"
         ]
+    },
+    { 
+        id: 5, 
+        status: "active",
+        category: "kitchen-furniture", 
+        title: "Modern 6-Chair Wooden Dining Set", 
+        price: "1,800,000", 
+        location: "Kampala", 
+        contact: "0758648710", 
+        description: "Durable pure mahogany wooden dining table with 6 comfortable cushions.",
+        images: [
+            "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=500",
+            "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500",
+            "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500"
+        ]
+    },
+    { 
+        id: 6, 
+        status: "active",
+        category: "fashion-style", 
+        title: "Unisex Vintage Corduroy Jackets", 
+        price: "45,000", 
+        location: "Wandegeya", 
+        contact: "0758648710", 
+        description: "Premium thrift vintage jackets. Available in brown, beige, and black sizes M to XL.",
+        images: [
+            "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
+            "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500",
+            "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?w=500"
+        ]
+    },
+    { 
+        id: 7, 
+        status: "active",
+        category: "makeup", 
+        title: "Matte Waterproof Lipstick Pack", 
+        price: "35,000", 
+        location: "Kampala", 
+        contact: "0758648710", 
+        description: "Long-lasting 12-color nude liquid matte lip gloss bundle setup.",
+        images: [
+            "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
+            "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=500",
+            "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500"
+        ]
     }
 ];
 
@@ -251,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = structuralDatabase.find(p => p.id === id);
         if(!item) return;
 
-        document.getElementById('detailCategory').innerText = item.category.toUpperCase();
+        document.getElementById('detailCategory').innerText = item.category.toUpperCase().replace("-", " & ");
         document.getElementById('detailTitle').innerText = item.title;
         document.getElementById('detailPrice').innerText = `UGX ${item.price}`;
         document.getElementById('detailLocation').innerText = item.location;
