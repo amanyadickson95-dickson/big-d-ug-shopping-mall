@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG D UG SHIPPING MALL | Classifieds</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">BIG D UG SHIPPING <span>MALL</span></div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="I am looking for...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-auth" id="googleAuthBtn"><i class="fab fa-google"></i> Sign In with Google</button>
+            <button class="btn-back" id="openAdminBtn" style="background: #333; color: #fff; margin-right: 10px;"><i class="fas fa-lock"></i> Admin Panel</button>
+            <button class="btn-post" id="openModalBtn"><i class="fas fa-plus-circle"></i> Sell / Post Ad</button>
+        </div>
+    </header>
+
+    <div class="shopping-couple-container">
+        <div class="slideshow-stage">
+            <div class="slide active" style="background-image: url('https://tse1.mm.bing.net/th/id/OIP.ccAiiE5CKgBqhOZhpfaDkgHaEK?cb=thfvnextfalcon3&pid=ImgDet&w=474&h=266&rs=1&o=7&rm=3')"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop&q=80')"></div>
+            <div class="slide" style="background-image: url('https://thumbs.dreamstime.com/b/black-loving-couple-embracing-drinking-coffee-shopping-together-mall-black-loving-couple-embracing-drinking-190346087.jpg')"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600&auto=format&fit=crop&q=80')"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=600&auto=format&fit=crop&q=80')"></div>
+            
+            <div class="slideshow-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="headline-promo">
+            <h3>Shop Happy, Save Big!</h3>
+            <p>Join thousands of happy customers finding unmatched shipping deals and classified offers safely every single day.</p>
+        </div>
+    </div>
+
+    <section class="hero-categories">
+        <h2>What are you looking for today?</h2>
+        <p class="note-green"> NOTE: Please our dearest customers don't pay before checking your item and if the seller allows delivery, please pay after your item is delivered. Thank you for trusting us on this market </p>
+        <div class="categories-grid">
+            <div class="cat-card active" data-category="all">
+                <i class="fas fa-th-large"></i>
+                <p>All Categories</p>
+            </div>
+            <div class="cat-card" data-category="phones">
+                <i class="fas fa-mobile-alt"></i>
+                <p>Phones & Tablets</p>
+            </div>
+            <div class="cat-card" data-category="vehicles">
+                <i class="fas fa-car"></i>
+                <p>Vehicles</p>
+            </div>
+            <div class="cat-card" data-category="real-estate">
+                <i class="fas fa-home"></i>
+                <p>Real Estate</p>
+            </div>
+            <div class="cat-card" data-category="electronics">
+                <i class="fas fa-laptop"></i>
+                <p>Electronics</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <h3 id="feedHeading">Trending Ads (All)</h3>
+        <div class="ads-grid" id="adsGrid"></div>
+    </main>
+
+    <a href="https://wa.me/256758648710?text=Hello%20Big%20D%20UG%20Shipping%20Mall,%20I%20need%20some%20help." target="_blank" class="floating-wa-help" title="Need Help? WhatsApp Us">
+        <i class="fab fa-whatsapp"></i> <span>Help Support</span>
+    </a>
+
+    <div class="modal-overlay" id="googleAuthModal">
+        <div class="modal-content auth-box">
+            <button class="close-btn" id="closeAuthModalBtn">&times;</button>
+            <div style="text-align: center; padding: 15px 5px;">
+                <i class="fab fa-google" style="font-size: 42px; color: #4285F4; margin-bottom: 15px;"></i>
+                <h3>Google Sign-In Required</h3>
+                <p style="font-size: 13px; color: #666; margin: 10px 0 20px 0; line-height: 1.4;">To publish ads, browse profiles, or contact verified sellers, please synchronize your Google Account.</p>
+                
+                <button id="confirmGoogleLoginBtn" class="google-submit-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G" style="width:18px; height:18px;">
+                    Continue with Google Account
+                </button>
+                
+                <p style="font-size: 11px; color: #999; margin-top: 15px;">For security verification questions, WhatsApp support at 0758648710</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-overlay" id="detailsModal">
+        <div class="details-content">
+            <button class="close-details-btn" id="closeDetailsBtn">&times;</button>
+            <div class="details-body">
+                <div class="details-gallery-side">
+                    <div class="main-preview-box" id="detailMainImg"></div>
+                    <div class="thumbnail-row" id="detailThumbnails"></div>
+                </div>
+                <div class="details-info-side">
+                    <span class="detail-badge" id="detailCategory">Phones</span>
+                    <h2 id="detailTitle">Item Title</h2>
+                    <div class="detail-price-box" id="detailPrice">UGX 0</div>
+                    
+                    <div class="detail-meta-item"><i class="fas fa-map-marker-alt"></i> <span id="detailLocation">Location</span></div>
+                    
+                    <h4>Description</h4>
+                    <p class="detail-description-text" id="detailDescription">No description available.</p>
+                    
+                    <div class="seller-card">
+                        <h5>Seller Contact Info</h5>
+                        <a href="#" id="detailCallBtn" class="action-btn-call"><i class="fas fa-phone-alt"></i> Call Seller</a>
+                        <a href="#" id="detailSampleWaBtn" target="_blank" class="action-btn-wa"><i class="fab fa-whatsapp"></i> Chat via WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            
+            <div id="stepDetails" class="form-step active">
+                <h3>Post Your Ad</h3>
+                <form id="adForm">
+                    <div class="form-group">
+                        <label>Select Category</label>
+                        <select id="itemCategory" required>
+                            <option value="phones">Phones & Tablets</option>
+                            <option value="vehicles">Vehicles</option>
+                            <option value="real-estate">Real Estate</option>
+                            <option value="electronics">Electronics</option>
+                        </select>
+                        <small id="categoryPriceTag" style="color: #2e7d32; font-weight: 600; margin-top: 4px; display: block;"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Item Title</label>
+                        <input type="text" id="itemTitle" placeholder="e.g. iPhone 14 Pro" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (UGX)</label>
+                        <input type="number" id="itemPrice" placeholder="e.g. 2500000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="itemLocation" placeholder="e.g. Kampala" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Seller Phone Number</label>
+                        <input type="tel" id="itemContact" placeholder="e.g. 0700000000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Detailed Description</label>
+                        <textarea id="itemDescription" rows="3" placeholder="Describe condition, features..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="font-weight: 600; color: #111;">Item Gallery Images (3 Photos Required)</label>
+                        <input type="url" id="itemImage1" style="margin-bottom: 6px;" placeholder="Paste link for Primary Main Photo" required>
+                        <input type="url" id="itemImage2" style="margin-bottom: 6px;" placeholder="Paste link for Photo 2" required>
+                        <input type="url" id="itemImage3" placeholder="Paste link for Photo 3" required>
+                    </div>
+                    
+                    <button type="button" class="btn-next" id="goToPaymentBtn">Proceed to Payment</button>
+                </form>
+            </div>
+
+            <div id="stepPayment" class="form-step">
+                <h3>How to Pay & Publish</h3>
+                <p style="font-size: 13px; color: #555; margin-bottom: 12px;">Please send the listing fee manually to one of our mobile money lines below:</p>
+                
+                <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 13px;">
+                    <p style="margin-bottom: 5px;"><strong><i class="fas fa-mobile-alt" style="color: #ffcc00;"></i> MTN MoMo:</strong> 0791618943</p>
+                    <p><strong><i class="fas fa-mobile-alt" style="color: #ff0000;"></i> Airtel Money:</strong> 0758648710</p>
+                </div>
+
+                <div class="price-box" id="dynamicPriceBox" style="font-size: 16px; margin-bottom: 15px; background: #eee; padding: 10px; border-radius: 4px; text-align: center;">Amount to Send: <strong>UGX 0</strong></div>
+                
+                <div class="form-group">
+                    <label>Your Mobile Money Name (Who Paid?)</label>
+                    <input type="text" id="payeeName" placeholder="e.g. John Okello" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Money Transaction ID / Ref Number</label>
+                    <input type="text" id="transactionId" placeholder="e.g. 40987654321" required>
+                    <small style="color: #777; font-size: 11px; display: block; margin-top: 2px;">Paste the ID from your MTN/Airtel text message.</small>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-back" id="goToDetailsBtn" style="flex: 1; padding: 10px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer;">Back</button>
+                    <button type="button" class="btn-pay" id="submitPaymentBtn" style="flex: 2; padding: 10px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit for Verification</button>
+                </div>
+                <p style="font-size: 11px; color:#777; text-align:center; margin-top:15px;">Need fast assistance? WhatsApp manual billing desk at 0758648710</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-content" style="max-width: 700px; width: 90%;">
+            <button class="close-btn" id="closeAdminModalBtn">&times;</button>
+            <h3>🔑 Admin Approval Center</h3>
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Cross-reference these submissions with your mobile money SMS log. Click approve to publish them live.</p>
+            <div id="adminTableContainer" style="max-height: 400px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
