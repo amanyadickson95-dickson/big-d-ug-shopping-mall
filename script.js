@@ -1,5 +1,5 @@
 // ======================================================
-// 1. FIREBASE CONFIGURATION (LOADED FROM YOUR DASHBOARD)
+// 1. FIREBASE PRODUCTION CREDENTIAL MATRIX
 // ======================================================
 const firebaseConfig = {
     apiKey: "AIzaSyAoOM8I-o5CpmA9_kNpaVRYdCrTDR1Wnf4",
@@ -10,51 +10,58 @@ const firebaseConfig = {
     appId: "1:645236372393:web:cdfb59c3d5eaa4e7dc8ab8"
 };
 
-// Initialize Firebase Core Engine Hooks
+// Initialize Engine Instances
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Global App Sync Memory Registries
 let structuralDatabase = [];
 let currentFilter = "all";
 let searchQuery = "";
 let calculatedFee = 3000;
 
-// Track Google Session via local client storage browser cookies
 let isGoogleUserLoggedIn = localStorage.getItem('isGoogleUserLoggedIn') === 'true';
 const ADMIN_PASSWORD = "27270";
 
 // ======================================================
-// 2. LIVE FIRESTORE SYNC LISTEN PIPELINE
+// 2. STABLE LIVE DATABASE SNAPSHOT LISTENERS
 // ======================================================
 function attachRealtimeDatabaseListener() {
-    db.collection("ads").onSnapshot((snapshot) => {
+    db.collection("ads").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
         structuralDatabase = [];
         
         snapshot.forEach((doc) => {
-            structuralDatabase.push({
-                id: doc.id, // Populates structural dataset using unique Firestore key ids
-                ...doc.data()
-            });
+            const data = doc.data();
+            // Defensive Guard: Skip corrupted records to prevent UI breakdown
+            if (data) {
+                structuralDatabase.push({
+                    id: doc.id,
+                    status: data.status || "pending",
+                    category: data.category || "phones",
+                    title: data.title || "Untitled Item",
+                    price: data.price || "0",
+                    location: data.location || "Unknown",
+                    contact: data.contact || "",
+                    description: data.description || "",
+                    images: data.images || ["", "", ""],
+                    payeeName: data.payeeName || "Anonymous",
+                    transactionId: data.transactionId || "N/A"
+                });
+            }
         });
 
-        // Instant UI feedback reload loops
+        // Fire rendering updates instantly across active modal components
         renderAds();
-        
-        const adminModal = document.getElementById('adminModal');
-        if (adminModal && adminModal.classList.contains('active')) {
-            renderAdminDashboard();
-        }
+        renderAdminDashboard();
     }, (error) => {
-        console.error("Firestore Pipe Interruption: ", error);
+        console.error("Critical Stream Exception: ", error);
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Start live database stream immediately upon content ready
+    // Engage online stream loops immediately
     attachRealtimeDatabaseListener();
 
-    // --- Hero Banner Slideshow Logic ---
+    // --- Banner Carousels Slideshow Logic ---
     const slides = document.querySelectorAll(".slide");
     const dots = document.querySelectorAll(".dot");
     let currentSlideIndex = 0;
@@ -70,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setInterval(transitionSlideshow, 3500);
     }
 
-    // --- DOM Interface Controls Cache Elements Mapping ---
+    // --- DOM Interface Controls Object Caches ---
     const adModal = document.getElementById('adModal');
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -109,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     itemCategory.addEventListener('change', updateDynamicPricingNotice);
 
-    // --- Google Identity Sign-In Engine Hooks ---
+    // --- Sign-In Actions ---
     googleAuthBtn.addEventListener('click', () => {
         if (isGoogleUserLoggedIn) {
             isGoogleUserLoggedIn = false;
@@ -133,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("✅ Authenticated successfully with Google!");
     });
 
-    // --- Account Validation Modal Access Guards ---
+    // --- UI Gate Guards ---
     if (openModalBtn) {
         openModalBtn.addEventListener('click', () => { 
             if (!isGoogleUserLoggedIn) {
@@ -216,9 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================================
-    // 3. MAIN MARKET FEED INTERFACE RENDERERS
+    // 3. UI GENERATION INTERFACES
     // ======================================================
     function renderAds() {
+        if (!adsGrid) return;
         adsGrid.innerHTML = ""; 
         let approvedItems = structuralDatabase.filter(item => item.status === "active");
         let itemsToDisplay = currentFilter === "all" ? approvedItems : approvedItems.filter(item => item.category === currentFilter);
@@ -291,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================================
-    // 4. TRANSACTION BACKEND MUTATIONS VIA CLOUD FIREBASE
+    // 4. PERSISTED DATA TRANSMISSIONS
     // ======================================================
     function processManualPaymentSubmit() {
         const payeeName = document.getElementById('payeeName').value.trim();
@@ -320,7 +328,6 @@ document.addEventListener("DOMContentLoaded", () => {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // Writes manually added elements straight up to the collection matrix online
         db.collection("ads").add(verificationPayload)
             .then(() => {
                 alert(`📥 Submission Logged under review online!\n\nOnce approved by the admin, your ad goes live instantly across all devices.`);
@@ -330,13 +337,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 adModal.classList.remove('active');
             })
             .catch((error) => {
-                alert("Failed to sync ad online. Check connection protocols.");
+                alert("Failed to sync ad online. Check connection protocols or database security rules.");
                 console.error("Firestore Error: ", error);
             });
     }
 
     function renderAdminDashboard() {
         const container = document.getElementById('adminTableContainer');
+        if (!container) return;
+
         let pendingItems = structuralDatabase.filter(item => item.status === "pending");
 
         if (pendingItems.length === 0) {
@@ -384,8 +393,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function approveAd(id) {
         if (!id) return;
-
-        // Modifies target verification status token value on server node reference instance
         db.collection("ads").doc(id).update({
             status: "active"
         })
