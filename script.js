@@ -14,7 +14,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Global App Sync Memory Registries (Starts Empty! We populate this directly from Firebase)
+// Global App Sync Memory Registries
 let structuralDatabase = [];
 let currentFilter = "all";
 let searchQuery = "";
@@ -28,18 +28,17 @@ const ADMIN_PASSWORD = "27270";
 // 2. LIVE FIRESTORE SYNC LISTEN PIPELINE
 // ======================================================
 function attachRealtimeDatabaseListener() {
-    // This connects live to your database collection. It triggers immediately on load AND on changes.
     db.collection("ads").onSnapshot((snapshot) => {
         structuralDatabase = [];
         
         snapshot.forEach((doc) => {
             structuralDatabase.push({
-                firestoreId: doc.id, 
+                id: doc.id, // Populates structural dataset using unique Firestore key ids
                 ...doc.data()
             });
         });
 
-        // Instant UI feedback reload engine loops
+        // Instant UI feedback reload loops
         renderAds();
         
         const adminModal = document.getElementById('adminModal');
@@ -52,7 +51,7 @@ function attachRealtimeDatabaseListener() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Start live collection data stream immediately when the page loads
+    // Start live database stream immediately upon content ready
     attachRealtimeDatabaseListener();
 
     // --- Hero Banner Slideshow Logic ---
@@ -243,23 +242,21 @@ document.addEventListener("DOMContentLoaded", () => {
         itemsToDisplay.forEach(item => {
             const adCard = document.createElement('div');
             adCard.classList.add('ad-card');
-            
-            // Set up a click listener using the unique Firestore document ID 
-            adCard.addEventListener('click', () => openAdDetails(item.firestoreId));
+            adCard.addEventListener('click', () => openAdDetails(item.id));
             adCard.innerHTML = `
-                <div class="ad-image" style="background-image: url('${item.images[0]}'); height: 170px; background-size: cover; background-position: center; border-radius: 4px 4px 0 0;"></div>
-                <div class="ad-info" style="padding: 12px; background: white; border: 1px solid #e1e1e5; border-top: none; border-radius: 0 0 4px 4px;">
-                    <h4 class="ad-title" style="font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; color:#333;">${item.title}</h4>
-                    <p class="ad-price" style="font-weight:bold; color:#2e7d32; font-size:14px; margin-bottom:6px;">UGX ${item.price}</p>
-                    <div class="ad-meta-row" style="font-size:11px; color:#777;"><i class="fas fa-map-marker-alt"></i> ${item.location}</div>
+                <div class="ad-image" style="background-image: url('${item.images[0]}'); height: 160px; background-size: cover; background-position: center;"></div>
+                <div class="ad-info">
+                    <h4 class="ad-title">${item.title}</h4>
+                    <p class="ad-price">UGX ${item.price}</p>
+                    <div class="ad-meta-row"><span><i class="fas fa-map-marker-alt"></i> ${item.location}</span></div>
                 </div>
             `;
             adsGrid.appendChild(adCard);
         });
     }
 
-    function openAdDetails(firestoreId) {
-        const item = structuralDatabase.find(p => p.firestoreId === firestoreId);
+    function openAdDetails(id) {
+        const item = structuralDatabase.find(p => p.id === id);
         if(!item) return;
 
         document.getElementById('detailCategory').innerText = item.category.toUpperCase();
@@ -280,19 +277,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if(!imgUrl) return;
             const thumb = document.createElement('div');
             thumb.classList.add('thumb-img');
-            thumb.style.width = "60px";
-            thumb.style.height = "50px";
-            thumb.style.backgroundSize = "cover";
-            thumb.style.backgroundPosition = "center";
-            thumb.style.borderRadius = "4px";
-            thumb.style.cursor = "pointer";
-            thumb.style.border = "2px solid transparent";
-            if(idx === 0) thumb.style.borderColor = "#3a2ee2";
+            if(idx === 0) thumb.classList.add('active');
             thumb.style.backgroundImage = `url('${imgUrl}')`;
-            
             thumb.addEventListener('click', () => {
-                document.querySelectorAll('.thumb-img').forEach(t => { t.style.borderColor = "transparent"; });
-                thumb.style.borderColor = "#3a2ee2";
+                document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
                 previewContainer.style.backgroundImage = `url('${imgUrl}')`;
             });
             thumbRow.appendChild(thumb);
@@ -314,7 +303,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const verificationPayload = {
-            id: Date.now(),
             status: "pending", 
             payeeName: payeeName,
             transactionId: transactionId,
@@ -328,10 +316,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById('itemImage1').value,
                 document.getElementById('itemImage2').value,
                 document.getElementById('itemImage3').value
-            ]
+            ],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // Write directly to your live cloud document database
+        // Writes manually added elements straight up to the collection matrix online
         db.collection("ads").add(verificationPayload)
             .then(() => {
                 alert(`📥 Submission Logged under review online!\n\nOnce approved by the admin, your ad goes live instantly across all devices.`);
@@ -375,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td style="padding: 10px;">${item.payeeName}</td>
                     <td style="padding: 10px;"><code style="background: #fff3e0; padding: 2px 6px; border-radius: 4px; color: #e65100;">${item.transactionId}</code></td>
                     <td style="padding: 10px; text-align: center;">
-                        <button class="approve-action-btn" data-firestore-id="${item.firestoreId}" style="background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Approve</button>
+                        <button class="approve-action-btn" data-id="${item.id}" style="background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Approve</button>
                     </td>
                 </tr>
             `;
@@ -387,17 +376,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const approveButtons = container.querySelectorAll('.approve-action-btn');
         approveButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const firestoreId = e.target.getAttribute('data-firestore-id');
-                approveAd(firestoreId);
+                const adId = e.target.getAttribute('data-id');
+                approveAd(adId);
             });
         });
     }
 
-    function approveAd(firestoreId) {
-        if (!firestoreId) return;
+    function approveAd(id) {
+        if (!id) return;
 
-        // Mutates status value on live cloud server node reference target
-        db.collection("ads").doc(firestoreId).update({
+        // Modifies target verification status token value on server node reference instance
+        db.collection("ads").doc(id).update({
             status: "active"
         })
         .then(() => {
