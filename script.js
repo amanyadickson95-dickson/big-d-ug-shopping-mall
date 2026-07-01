@@ -14,7 +14,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Global App Sync Memory Registries
+// Global App Sync Memory Registries (Starts Empty! We populate this directly from Firebase)
 let structuralDatabase = [];
 let currentFilter = "all";
 let searchQuery = "";
@@ -28,7 +28,8 @@ const ADMIN_PASSWORD = "27270";
 // 2. LIVE FIRESTORE SYNC LISTEN PIPELINE
 // ======================================================
 function attachRealtimeDatabaseListener() {
-    db.collection("ads").orderBy("id", "desc").onSnapshot((snapshot) => {
+    // This connects live to your database collection. It triggers immediately on load AND on changes.
+    db.collection("ads").onSnapshot((snapshot) => {
         structuralDatabase = [];
         
         snapshot.forEach((doc) => {
@@ -51,7 +52,7 @@ function attachRealtimeDatabaseListener() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Start live collection data stream
+    // Start live collection data stream immediately when the page loads
     attachRealtimeDatabaseListener();
 
     // --- Hero Banner Slideshow Logic ---
@@ -242,21 +243,23 @@ document.addEventListener("DOMContentLoaded", () => {
         itemsToDisplay.forEach(item => {
             const adCard = document.createElement('div');
             adCard.classList.add('ad-card');
-            adCard.addEventListener('click', () => openAdDetails(item.id));
+            
+            // Set up a click listener using the unique Firestore document ID 
+            adCard.addEventListener('click', () => openAdDetails(item.firestoreId));
             adCard.innerHTML = `
-                <div class="ad-image" style="background-image: url('${item.images[0]}');"></div>
-                <div class="ad-info">
-                    <h4 class="ad-title">${item.title}</h4>
-                    <p class="ad-price">UGX ${item.price}</p>
-                    <div class="ad-meta-row"><span><i class="fas fa-map-marker-alt"></i> ${item.location}</span></div>
+                <div class="ad-image" style="background-image: url('${item.images[0]}'); height: 170px; background-size: cover; background-position: center; border-radius: 4px 4px 0 0;"></div>
+                <div class="ad-info" style="padding: 12px; background: white; border: 1px solid #e1e1e5; border-top: none; border-radius: 0 0 4px 4px;">
+                    <h4 class="ad-title" style="font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; color:#333;">${item.title}</h4>
+                    <p class="ad-price" style="font-weight:bold; color:#2e7d32; font-size:14px; margin-bottom:6px;">UGX ${item.price}</p>
+                    <div class="ad-meta-row" style="font-size:11px; color:#777;"><i class="fas fa-map-marker-alt"></i> ${item.location}</div>
                 </div>
             `;
             adsGrid.appendChild(adCard);
         });
     }
 
-    function openAdDetails(id) {
-        const item = structuralDatabase.find(p => p.id === id);
+    function openAdDetails(firestoreId) {
+        const item = structuralDatabase.find(p => p.firestoreId === firestoreId);
         if(!item) return;
 
         document.getElementById('detailCategory').innerText = item.category.toUpperCase();
@@ -277,11 +280,19 @@ document.addEventListener("DOMContentLoaded", () => {
             if(!imgUrl) return;
             const thumb = document.createElement('div');
             thumb.classList.add('thumb-img');
-            if(idx === 0) thumb.classList.add('active');
+            thumb.style.width = "60px";
+            thumb.style.height = "50px";
+            thumb.style.backgroundSize = "cover";
+            thumb.style.backgroundPosition = "center";
+            thumb.style.borderRadius = "4px";
+            thumb.style.cursor = "pointer";
+            thumb.style.border = "2px solid transparent";
+            if(idx === 0) thumb.style.borderColor = "#3a2ee2";
             thumb.style.backgroundImage = `url('${imgUrl}')`;
+            
             thumb.addEventListener('click', () => {
-                document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
-                thumb.classList.add('active');
+                document.querySelectorAll('.thumb-img').forEach(t => { t.style.borderColor = "transparent"; });
+                thumb.style.borderColor = "#3a2ee2";
                 previewContainer.style.backgroundImage = `url('${imgUrl}')`;
             });
             thumbRow.appendChild(thumb);
