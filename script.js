@@ -1,104 +1,112 @@
-let structuralDatabase = [
-    { 
-        id: 1, 
-        status: "active",
-        category: "phones", 
-        title: "iPhone 13 Pro Max - 256GB", 
-        price: "2,500,000", 
-        location: "Kampala", 
-        contact: "0770123456", 
-        description: "Super clean iPhone 13 Pro Max. Battery health is 88%. No scratches.",
-        images: [
-            "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500",
-            "https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500",
-            "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500"
-        ]
-    },
-    { 
-        id: 2, 
-        status: "active",
-        category: "vehicles", 
-        title: "Toyota Harrier 2015 Silver", 
-        price: "68,000,000", 
-        location: "Wakiso", 
-        contact: "0701987654", 
-        description: "Excellent driving condition Toyota Harrier. Low mileage.",
-        images: [
-            "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500",
-            "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500",
-            "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500"
-        ]
-    },
-    { 
-        id: 4, 
-        status: "active",
-        category: "real-estate", 
-        title: "3 bedroom house", 
-        price: "708,000,000", 
-        location: "Nansana", 
-        contact: "0701987654", 
-        description: "it is a 3bedroom, self contained with a big parking space.",
-        images: [
-            "https://cdn.shopify.com/s/files/1/0567/3873/products/Contemporary3bedroomHouse-ID13418-01.jpg?v=1670930837",
-            "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500",
-            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500"
-        ]
-    },
-    { 
-        id: 5, 
-        status: "active",
-        category: "kitchen-furniture", 
-        title: "Modern 6-Chair Wooden Dining Set", 
-        price: "1,800,000", 
-        location: "Kampala", 
-        contact: "0758648710", 
-        description: "Durable pure mahogany wooden dining table with 6 comfortable cushions.",
-        images: [
-            "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=500",
-            "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500",
-            "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500"
-        ]
-    },
-    { 
-        id: 6, 
-        status: "active",
-        category: "fashion-style", 
-        title: "Unisex Vintage Corduroy Jackets", 
-        price: "45,000", 
-        location: "Wandegeya", 
-        contact: "0758648710", 
-        description: "Premium thrift vintage jackets. Available in brown, beige, and black sizes M to XL.",
-        images: [
-            "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
-            "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500",
-            "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?w=500"
-        ]
-    },
-    { 
-        id: 7, 
-        status: "active",
-        category: "makeup", 
-        title: "Matte Waterproof Lipstick Pack", 
-        price: "35,000", 
-        location: "Kampala", 
-        contact: "0758648710", 
-        description: "Long-lasting 12-color nude liquid matte lip gloss bundle setup.",
-        images: [
-            "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
-            "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=500",
-            "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500"
-        ]
-    }
-];
+// 1. INITIALIZE DATABASE FROM LOCALSTORAGE OR FALLBACK TO MOCK DATA
+let structuralDatabase = JSON.parse(localStorage.getItem('mall_database'));
+
+if (!structuralDatabase || structuralDatabase.length === 0) {
+    structuralDatabase = [
+        { 
+            id: 1, 
+            status: "active",
+            category: "phones", 
+            title: "iPhone 13 Pro Max - 256GB", 
+            price: "2,500,000", 
+            location: "Kampala", 
+            contact: "0770123456", 
+            description: "Super clean iPhone 13 Pro Max. Battery health is 88%. No scratches.",
+            images: [
+                "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500",
+                "https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500",
+                "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500"
+            ]
+        },
+        { 
+            id: 2, 
+            status: "active",
+            category: "vehicles", 
+            title: "Toyota Harrier 2015 Silver", 
+            price: "68,000,000", 
+            location: "Wakiso", 
+            contact: "0701987654", 
+            description: "Excellent driving condition Toyota Harrier. Low mileage.",
+            images: [
+                "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500",
+                "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500",
+                "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500"
+            ]
+        },
+        { 
+            id: 4, 
+            status: "active",
+            category: "real-estate", 
+            title: "3 bedroom house", 
+            price: "708,000,000", 
+            location: "Nansana", 
+            contact: "0701987654", 
+            description: "it is a 3bedroom, self contained with a big parking space.",
+            images: [
+                "https://cdn.shopify.com/s/files/1/0567/3873/products/Contemporary3bedroomHouse-ID13418-01.jpg?v=1670930837",
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500"
+            ]
+        },
+        { 
+            id: 5, 
+            status: "active",
+            category: "kitchen-furniture", 
+            title: "Modern 6-Chair Wooden Dining Set", 
+            price: "1,800,000", 
+            location: "Kampala", 
+            contact: "0758648710", 
+            description: "Durable pure mahogany wooden dining table with 6 comfortable cushions.",
+            images: [
+                "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=500",
+                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500",
+                "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500"
+            ]
+        },
+        { 
+            id: 6, 
+            status: "active",
+            category: "fashion-style", 
+            title: "Unisex Vintage Corduroy Jackets", 
+            price: "45,000", 
+            location: "Wandegeya", 
+            contact: "0758648710", 
+            description: "Premium thrift vintage jackets. Available in brown, beige, and black sizes M to XL.",
+            images: [
+                "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
+                "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500",
+                "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?w=500"
+            ]
+        },
+        { 
+            id: 7, 
+            status: "active",
+            category: "makeup", 
+            title: "Matte Waterproof Lipstick Pack", 
+            price: "35,000", 
+            location: "Kampala", 
+            contact: "0758648710", 
+            description: "Long-lasting 12-color nude liquid matte lip gloss bundle setup.",
+            images: [
+                "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
+                "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=500",
+                "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500"
+            ]
+        }
+    ];
+    localStorage.setItem('mall_database', JSON.stringify(structuralDatabase));
+}
 
 let currentFilter = "all";
 let searchQuery = "";
 let calculatedFee = 3000;
-
-// Tracking variable for Google Login validation
 let isGoogleUserLoggedIn = false;
-
 const ADMIN_PASSWORD = "27270";
+
+// HELPER FUNCTION TO SAVE ANY DATA STATE CHANGES
+function saveDatabaseToStorage() {
+    localStorage.setItem('mall_database', JSON.stringify(structuralDatabase));
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     // --- Hero Banner Slideshow Logic ---
@@ -107,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentSlideIndex = 0;
 
     function transitionSlideshow() {
+        if(slides.length === 0) return;
         slides[currentSlideIndex].classList.remove("active");
         dots[currentSlideIndex].classList.remove("active");
         currentSlideIndex = (currentSlideIndex + 1) % slides.length;
@@ -120,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     
-    // Google Login Modal Elements
     const googleAuthModal = document.getElementById('googleAuthModal');
     const googleAuthBtn = document.getElementById('googleAuthBtn');
     const closeAuthModalBtn = document.getElementById('closeAuthModalBtn');
@@ -205,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (goToPaymentBtn) {
         goToPaymentBtn.addEventListener('click', () => {
-            // Validation updated to expect all 3 structural images
             if (!document.getElementById('itemTitle').value || !document.getElementById('itemPrice').value || 
                 !document.getElementById('itemLocation').value || !document.getElementById('itemContact').value ||
                 !document.getElementById('itemDescription').value || 
@@ -229,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateDynamicPricingNotice() {
         const selectedCat = itemCategory.value;
         const priceTagLabel = document.getElementById('categoryPriceTag');
+        if (!priceTagLabel) return;
         if (selectedCat === "vehicles" || selectedCat === "real-estate") {
             calculatedFee = 30000;
             priceTagLabel.innerText = "Premium Category Listing Fee: UGX 30,000 / month";
@@ -243,6 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchBtn.addEventListener('click', () => { searchQuery = searchInput.value.toLowerCase().trim(); renderAds(); });
     }
 
+    // Fixed setup Category filter elements safely 
     function setupCategoryFilters() {
         const categories = document.querySelectorAll('.cat-card');
         categories.forEach(card => {
@@ -308,7 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const previewContainer = document.getElementById('detailMainImg');
         previewContainer.style.backgroundImage = `url('${item.images[0]}')`;
         
-        // Render up to 3 thumbnails inside the viewing interface
         const thumbRow = document.getElementById('detailThumbnails');
         thumbRow.innerHTML = "";
         item.images.forEach((imgUrl, idx) => {
@@ -337,7 +345,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Storing all 3 pictures inside the database object
         const verificationPayload = {
             id: Date.now(),
             status: "pending", 
@@ -357,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         structuralDatabase.unshift(verificationPayload);
+        saveDatabaseToStorage(); // Save payload locally immediately
         
         alert(`📥 Submission Logged under review!\n\nOnce approved by admin, your ad goes live.`);
         document.getElementById('adForm').reset();
@@ -417,6 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = structuralDatabase.find(p => p.id === id);
         if (item) {
             item.status = "active";
+            saveDatabaseToStorage(); // Persist approval change permanently
             alert(`✅ "${item.title}" has been verified and published live successfully!`);
             renderAdminDashboard();
             renderAds();
