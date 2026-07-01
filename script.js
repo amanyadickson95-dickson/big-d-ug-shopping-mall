@@ -26,12 +26,12 @@ const ADMIN_PASSWORD = "27270";
 // 2. STABLE LIVE DATABASE SNAPSHOT LISTENERS
 // ======================================================
 function attachRealtimeDatabaseListener() {
-    db.collection("ads").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+    // Listen for realtime updates and render immediately when changes happen online
+    db.collection("ads").onSnapshot((snapshot) => {
         structuralDatabase = [];
         
         snapshot.forEach((doc) => {
             const data = doc.data();
-            // Defensive Guard: Skip corrupted records to prevent UI breakdown
             if (data) {
                 structuralDatabase.push({
                     id: doc.id,
@@ -49,7 +49,7 @@ function attachRealtimeDatabaseListener() {
             }
         });
 
-        // Fire rendering updates instantly across active modal components
+        // Force both the public feed and admin view to re-render in real time
         renderAds();
         renderAdminDashboard();
     }, (error) => {
@@ -210,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchBtn.addEventListener('click', () => { searchQuery = searchInput.value.toLowerCase().trim(); renderAds(); });
     }
 
+    // Fix: Clear visual selection active states properly across desktop grid cards
     function setupCategoryFilters() {
         const categories = document.querySelectorAll('.cat-card');
         categories.forEach(card => {
@@ -223,11 +224,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================================
-    // 3. UI GENERATION INTERFACES
+    // 3. UI GENERATION INTERFACES (HOMEPAGE FEED)
     // ======================================================
     function renderAds() {
         if (!adsGrid) return;
         adsGrid.innerHTML = ""; 
+        
+        // Filter out items that are marked as 'active'
         let approvedItems = structuralDatabase.filter(item => item.status === "active");
         let itemsToDisplay = currentFilter === "all" ? approvedItems : approvedItems.filter(item => item.category === currentFilter);
             
@@ -251,11 +254,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const adCard = document.createElement('div');
             adCard.classList.add('ad-card');
             adCard.addEventListener('click', () => openAdDetails(item.id));
+            
+            // Fix: Check if price has commas already, if not format it safely
+            let formattedPrice = item.price;
+            if(!String(formattedPrice).includes(",")) {
+                formattedPrice = Number(formattedPrice.replace(/[^0-9]/g, '')).toLocaleString();
+            }
+
             adCard.innerHTML = `
                 <div class="ad-image" style="background-image: url('${item.images[0]}'); height: 160px; background-size: cover; background-position: center;"></div>
                 <div class="ad-info">
                     <h4 class="ad-title">${item.title}</h4>
-                    <p class="ad-price">UGX ${item.price}</p>
+                    <p class="ad-price">UGX ${formattedPrice}</p>
                     <div class="ad-meta-row"><span><i class="fas fa-map-marker-alt"></i> ${item.location}</span></div>
                 </div>
             `;
@@ -269,7 +279,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById('detailCategory').innerText = item.category.toUpperCase();
         document.getElementById('detailTitle').innerText = item.title;
-        document.getElementById('detailPrice').innerText = `UGX ${item.price}`;
+        
+        let detailPriceFormatted = item.price;
+        if(!String(detailPriceFormatted).includes(",")) {
+            detailPriceFormatted = Number(detailPriceFormatted.replace(/[^0-9]/g, '')).toLocaleString();
+        }
+        document.getElementById('detailPrice').innerText = `UGX ${detailPriceFormatted}`;
         document.getElementById('detailLocation').innerText = item.location;
         document.getElementById('detailDescription').innerText = item.description;
         
@@ -310,13 +325,16 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Clean user string inputs to plain digits so math processing doesn't block updates
+        let cleanRawPrice = document.getElementById('itemPrice').value.replace(/[^0-9]/g, '');
+
         const verificationPayload = {
             status: "pending", 
             payeeName: payeeName,
             transactionId: transactionId,
             category: itemCategory.value,
             title: document.getElementById('itemTitle').value,
-            price: Number(document.getElementById('itemPrice').value).toLocaleString(),
+            price: cleanRawPrice, 
             location: document.getElementById('itemLocation').value,
             contact: document.getElementById('itemContact').value,
             description: document.getElementById('itemDescription').value,
@@ -367,9 +385,14 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         pendingItems.forEach(item => {
+            let adminPrice = item.price;
+            if(!String(adminPrice).includes(",")) {
+                adminPrice = Number(adminPrice.replace(/[^0-9]/g, '')).toLocaleString();
+            }
+
             tableHtml += `
                 <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 10px;"><strong>${item.title}</strong><br><span style="color:#777;">${item.category} | UGX ${item.price}</span></td>
+                    <td style="padding: 10px;"><strong>${item.title}</strong><br><span style="color:#777;">${item.category} | UGX ${adminPrice}</span></td>
                     <td style="padding: 10px;">${item.payeeName}</td>
                     <td style="padding: 10px;"><code style="background: #fff3e0; padding: 2px 6px; border-radius: 4px; color: #e65100;">${item.transactionId}</code></td>
                     <td style="padding: 10px; text-align: center;">
@@ -393,11 +416,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function approveAd(id) {
         if (!id) return;
+        
+        // Mutate document state straight to "active"
         db.collection("ads").doc(id).update({
             status: "active"
         })
         .then(() => {
-            alert(`✅ Ad has been verified and published live successfully!`);
+            alert(`✅ Ad verified! It is now live on the public market homepage.`);
         })
         .catch((error) => {
             alert("Error updating database item states.");
