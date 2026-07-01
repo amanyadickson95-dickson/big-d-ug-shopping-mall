@@ -1,133 +1,76 @@
-// 1. INITIALIZE DATABASE FROM LOCALSTORAGE OR FALLBACK TO MOCK DATA
-let structuralDatabase = JSON.parse(localStorage.getItem('mall_database'));
+// ======================================================
+// 1. FIREBASE CONFIGURATION (LOADED FROM YOUR DASHBOARD)
+// ======================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyAoOM8I-o5CpmA9_kNpaVRYdCrTDR1Wnf4",
+    authDomain: "studio-328883854-f9b5b.firebaseapp.com",
+    projectId: "studio-328883854-f9b5b",
+    storageBucket: "studio-328883854-f9b5b.firebasestorage.app",
+    messagingSenderId: "645236372393",
+    appId: "1:645236372393:web:cdfb59c3d5eaa4e7dc8ab8"
+};
 
-if (!structuralDatabase || structuralDatabase.length === 0) {
-    structuralDatabase = [
-        { 
-            id: 1, 
-            status: "active",
-            category: "phones", 
-            title: "iPhone 13 Pro Max - 256GB", 
-            price: "2,500,000", 
-            location: "Kampala", 
-            contact: "0770123456", 
-            description: "Super clean iPhone 13 Pro Max. Battery health is 88%. No scratches.",
-            images: [
-                "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500",
-                "https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500",
-                "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500"
-            ]
-        },
-        { 
-            id: 2, 
-            status: "active",
-            category: "vehicles", 
-            title: "Toyota Harrier 2015 Silver", 
-            price: "68,000,000", 
-            location: "Wakiso", 
-            contact: "0701987654", 
-            description: "Excellent driving condition Toyota Harrier. Low mileage.",
-            images: [
-                "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500",
-                "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500",
-                "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500"
-            ]
-        },
-        { 
-            id: 4, 
-            status: "active",
-            category: "real-estate", 
-            title: "3 bedroom house", 
-            price: "708,000,000", 
-            location: "Nansana", 
-            contact: "0701987654", 
-            description: "it is a 3bedroom, self contained with a big parking space.",
-            images: [
-                "https://cdn.shopify.com/s/files/1/0567/3873/products/Contemporary3bedroomHouse-ID13418-01.jpg?v=1670930837",
-                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500",
-                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500"
-            ]
-        },
-        { 
-            id: 5, 
-            status: "active",
-            category: "kitchen-furniture", 
-            title: "Modern 6-Chair Wooden Dining Set", 
-            price: "1,800,000", 
-            location: "Kampala", 
-            contact: "0758648710", 
-            description: "Durable pure mahogany wooden dining table with 6 comfortable cushions.",
-            images: [
-                "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=500",
-                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500",
-                "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500"
-            ]
-        },
-        { 
-            id: 6, 
-            status: "active",
-            category: "fashion-style", 
-            title: "Unisex Vintage Corduroy Jackets", 
-            price: "45,000", 
-            location: "Wandegeya", 
-            contact: "0758648710", 
-            description: "Premium thrift vintage jackets. Available in brown, beige, and black sizes M to XL.",
-            images: [
-                "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
-                "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500",
-                "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?w=500"
-            ]
-        },
-        { 
-            id: 7, 
-            status: "active",
-            category: "makeup", 
-            title: "Matte Waterproof Lipstick Pack", 
-            price: "35,000", 
-            location: "Kampala", 
-            contact: "0758648710", 
-            description: "Long-lasting 12-color nude liquid matte lip gloss bundle setup.",
-            images: [
-                "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
-                "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=500",
-                "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500"
-            ]
-        }
-    ];
-    localStorage.setItem('mall_database', JSON.stringify(structuralDatabase));
-}
+// Initialize Firebase Core Engine Hooks
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
+// Global App Sync Memory Registries
+let structuralDatabase = [];
 let currentFilter = "all";
 let searchQuery = "";
 let calculatedFee = 3000;
 
-// PERSIST GOOGLE SIGN-IN STATUS SO REFRESHING DOES NOT LOG USERS OUT
+// Track Google Session via local client storage browser cookies
 let isGoogleUserLoggedIn = localStorage.getItem('isGoogleUserLoggedIn') === 'true';
-
 const ADMIN_PASSWORD = "27270";
 
-// HELPER FUNCTION TO SAVE ANY DATA STATE CHANGES
-function saveDatabaseToStorage() {
-    localStorage.setItem('mall_database', JSON.stringify(structuralDatabase));
+// ======================================================
+// 2. LIVE FIRESTORE SYNC LISTEN PIPELINE
+// ======================================================
+function attachRealtimeDatabaseListener() {
+    db.collection("ads").orderBy("id", "desc").onSnapshot((snapshot) => {
+        structuralDatabase = [];
+        
+        snapshot.forEach((doc) => {
+            structuralDatabase.push({
+                firestoreId: doc.id, 
+                ...doc.data()
+            });
+        });
+
+        // Instant UI feedback reload engine loops
+        renderAds();
+        
+        const adminModal = document.getElementById('adminModal');
+        if (adminModal && adminModal.classList.contains('active')) {
+            renderAdminDashboard();
+        }
+    }, (error) => {
+        console.error("Firestore Pipe Interruption: ", error);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Start live collection data stream
+    attachRealtimeDatabaseListener();
+
     // --- Hero Banner Slideshow Logic ---
     const slides = document.querySelectorAll(".slide");
     const dots = document.querySelectorAll(".dot");
     let currentSlideIndex = 0;
 
-    function transitionSlideshow() {
-        if(slides.length === 0) return;
-        slides[currentSlideIndex].classList.remove("active");
-        dots[currentSlideIndex].classList.remove("active");
-        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-        slides[currentSlideIndex].classList.add("active");
-        dots[currentSlideIndex].classList.add("active");
+    if (slides.length > 0) {
+        function transitionSlideshow() {
+            slides[currentSlideIndex].classList.remove("active");
+            dots[currentSlideIndex].classList.remove("active");
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            slides[currentSlideIndex].classList.add("active");
+            dots[currentSlideIndex].classList.add("active");
+        }
+        setInterval(transitionSlideshow, 3500);
     }
-    setInterval(transitionSlideshow, 3500);
 
-    // --- Core UI Elements ---
+    // --- DOM Interface Controls Cache Elements Mapping ---
     const adModal = document.getElementById('adModal');
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -155,24 +98,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const goToDetailsBtn = document.getElementById('goToDetailsBtn');
     const submitPaymentBtn = document.getElementById('submitPaymentBtn');
 
-    // INITIAL REFRESH CHECK: Update Google button styling if user was previously logged in
     if (isGoogleUserLoggedIn) {
         googleAuthBtn.innerHTML = `<i class="fas fa-user-circle"></i> Google Account Connected`;
         googleAuthBtn.classList.add('logged-in');
     }
 
-    renderAds();
     setupCategoryFilters();
     setupSearchFunctionality();
     updateDynamicPricingNotice();
 
     itemCategory.addEventListener('change', updateDynamicPricingNotice);
 
-    // --- Google Auth Actions ---
+    // --- Google Identity Sign-In Engine Hooks ---
     googleAuthBtn.addEventListener('click', () => {
         if (isGoogleUserLoggedIn) {
             isGoogleUserLoggedIn = false;
-            localStorage.setItem('isGoogleUserLoggedIn', 'false'); // Save logged out state
+            localStorage.setItem('isGoogleUserLoggedIn', 'false');
             googleAuthBtn.innerHTML = `<i class="fab fa-google"></i> Sign In with Google`;
             googleAuthBtn.classList.remove('logged-in');
             alert("Signed out from Google Account.");
@@ -185,14 +126,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     confirmGoogleLoginBtn.addEventListener('click', () => {
         isGoogleUserLoggedIn = true;
-        localStorage.setItem('isGoogleUserLoggedIn', 'true'); // Save login state permanently
+        localStorage.setItem('isGoogleUserLoggedIn', 'true');
         googleAuthBtn.innerHTML = `<i class="fas fa-user-circle"></i> Google Account Connected`;
         googleAuthBtn.classList.add('logged-in');
         googleAuthModal.classList.remove('active');
         alert("✅ Authenticated successfully with Google!");
     });
 
-    // --- Ad Creation Gate Check ---
+    // --- Account Validation Modal Access Guards ---
     if (openModalBtn) {
         openModalBtn.addEventListener('click', () => { 
             if (!isGoogleUserLoggedIn) {
@@ -274,6 +215,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // ======================================================
+    // 3. MAIN MARKET FEED INTERFACE RENDERERS
+    // ======================================================
     function renderAds() {
         adsGrid.innerHTML = ""; 
         let approvedItems = structuralDatabase.filter(item => item.status === "active");
@@ -315,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = structuralDatabase.find(p => p.id === id);
         if(!item) return;
 
-        document.getElementById('detailCategory').innerText = item.category.toUpperCase().replace("-", " & ");
+        document.getElementById('detailCategory').innerText = item.category.toUpperCase();
         document.getElementById('detailTitle').innerText = item.title;
         document.getElementById('detailPrice').innerText = `UGX ${item.price}`;
         document.getElementById('detailLocation').innerText = item.location;
@@ -346,6 +290,9 @@ document.addEventListener("DOMContentLoaded", () => {
         detailsModal.classList.add('active'); 
     }
 
+    // ======================================================
+    // 4. TRANSACTION BACKEND MUTATIONS VIA CLOUD FIREBASE
+    // ======================================================
     function processManualPaymentSubmit() {
         const payeeName = document.getElementById('payeeName').value.trim();
         const transactionId = document.getElementById('transactionId').value.trim();
@@ -373,15 +320,19 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         };
 
-        structuralDatabase.unshift(verificationPayload);
-        saveDatabaseToStorage();
-        
-        alert(`📥 Submission Logged under review!\n\nOnce approved by admin, your ad goes live.`);
-        document.getElementById('adForm').reset();
-        document.getElementById('payeeName').value = "";
-        document.getElementById('transactionId').value = "";
-        adModal.classList.remove('active');
-        renderAds();
+        // Write directly to your live cloud document database
+        db.collection("ads").add(verificationPayload)
+            .then(() => {
+                alert(`📥 Submission Logged under review online!\n\nOnce approved by the admin, your ad goes live instantly across all devices.`);
+                document.getElementById('adForm').reset();
+                document.getElementById('payeeName').value = "";
+                document.getElementById('transactionId').value = "";
+                adModal.classList.remove('active');
+            })
+            .catch((error) => {
+                alert("Failed to sync ad online. Check connection protocols.");
+                console.error("Firestore Error: ", error);
+            });
     }
 
     function renderAdminDashboard() {
@@ -413,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td style="padding: 10px;">${item.payeeName}</td>
                     <td style="padding: 10px;"><code style="background: #fff3e0; padding: 2px 6px; border-radius: 4px; color: #e65100;">${item.transactionId}</code></td>
                     <td style="padding: 10px; text-align: center;">
-                        <button class="approve-action-btn" data-id="${item.id}" style="background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Approve</button>
+                        <button class="approve-action-btn" data-firestore-id="${item.firestoreId}" style="background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Approve</button>
                     </td>
                 </tr>
             `;
@@ -425,20 +376,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const approveButtons = container.querySelectorAll('.approve-action-btn');
         approveButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const adId = parseInt(e.target.getAttribute('data-id'));
-                approveAd(adId);
+                const firestoreId = e.target.getAttribute('data-firestore-id');
+                approveAd(firestoreId);
             });
         });
     }
 
-    function approveAd(id) {
-        const item = structuralDatabase.find(p => p.id === id);
-        if (item) {
-            item.status = "active";
-            saveDatabaseToStorage();
-            alert(`✅ "${item.title}" has been verified and published live successfully!`);
-            renderAdminDashboard();
-            renderAds();
-        }
+    function approveAd(firestoreId) {
+        if (!firestoreId) return;
+
+        // Mutates status value on live cloud server node reference target
+        db.collection("ads").doc(firestoreId).update({
+            status: "active"
+        })
+        .then(() => {
+            alert(`✅ Ad has been verified and published live successfully!`);
+        })
+        .catch((error) => {
+            alert("Error updating database item states.");
+            console.error("Firestore Update Error: ", error);
+        });
     }
 });
