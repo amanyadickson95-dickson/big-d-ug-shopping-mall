@@ -21,7 +21,7 @@ let structuralDatabase = [
     { id: "p2", status: "active", category: "phones", title: "Samsung Galaxy S22 Ultra 5G", price: "2100000", location: "Entebbe", contact: "0752111222", description: "512GB Storage, Phantom Black, comes with original S-Pen. Working perfectly.", images: ["https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500", "", ""] },
     { id: "p3", status: "active", category: "phones", title: "Oppo Reno 6 5G", price: "1150000", location: "Kampala", contact: "0783445566", description: "Stellar Black edition, 8GB RAM, 128GB ROM. High-quality camera execution.", images: ["https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500", "", ""] },
     { id: "p4", status: "active", category: "phones", title: "Infinix Note 30 Pro", price: "850000", location: "Mbarara", contact: "0701998877", description: "Magic Black, 68W fast charging, 256GB storage. Barely used.", images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500", "", ""] },
-    { id: "p5", status: "active", category: "phones", title: "Google Pixel 7 Pro", price: "1850000", location: "Jinjal", contact: "0772665544", description: "128GB Obsidian, Factory Unlocked, incredible AI camera features.", images: ["https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500", "", ""] },
+    { id: "p5", status: "active", category: "phones", title: "Google Pixel 7 Pro", price: "1850000", location: "Jinja", contact: "0772665544", description: "128GB Obsidian, Factory Unlocked, incredible AI camera features.", images: ["https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500", "", ""] },
     { id: "p6", status: "active", category: "phones", title: "Tecno Camon 20 Premier", price: "950000", location: "Kampala", contact: "0751887766", description: "512GB storage, 8GB RAM, leather back layout design.", images: ["https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500", "", ""] },
     { id: "p7", status: "active", category: "phones", title: "Xiaomi Redmi Note 12 Pro", price: "780000", location: "Gulu", contact: "0785112233", description: "Dual SIM, Onyx Black, 128GB. Great battery life performance.", images: ["https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500", "", ""] },
     { id: "p8", status: "active", category: "phones", title: "iPad Air 5 M1 Chip", price: "2300000", location: "Kampala", contact: "0706334455", description: "Space Gray, 64GB WiFi setup. Excellent choice for gaming and digital web work.", images: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500", "", ""] },
@@ -35,7 +35,7 @@ let structuralDatabase = [
     { id: "p16", status: "active", category: "phones", title: "Tecno Spark 20 Pro", price: "650000", location: "Masaka", contact: "0705113355", description: "256GB Storage, 8GB RAM, modern look and heavy battery life module.", images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500", "", ""] },
     { id: "p17", status: "active", category: "phones", title: "iPhone 12 - 128GB Black", price: "1600000", location: "Kampala", contact: "0771882299", description: "Unlocked, fully tested, True Tone active, very minor edge wear.", images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500", "", ""] },
     { id: "p18", status: "active", category: "phones", title: "Samsung Galaxy Tab S8", price: "1900000", location: "Kampala", contact: "0758442211", description: "11-inch premium tablet setup, perfect configuration for document edits.", images: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500", "", ""] },
-    { id: "p19", status: "active", category: "phones", title: "Huawei P50 Pro Dual SIM", price: "1550000", location: "Jinjal", contact: "0782337711", description: "8GB RAM, Cocoa Gold finish, crystal clear high zoom optics.", images: ["https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500", "", ""] },
+    { id: "p19", status: "active", category: "phones", title: "Huawei P50 Pro Dual SIM", price: "1550000", location: "Jinja", contact: "0782337711", description: "8GB RAM, Cocoa Gold finish, crystal clear high zoom optics.", images: ["https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=500", "", ""] },
     { id: "p20", status: "active", category: "phones", title: "iPhone SE 2022 (3rd Gen)", price: "950000", location: "Kampala", contact: "0703887711", description: "64GB Product Red edition, fast A15 Bionic performance framework.", images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500", "", ""] },
 
     // === VEHICLES (20 Ads) ===
@@ -96,7 +96,7 @@ let structuralDatabase = [
     { id: "e11", status: "active", category: "electronics", title: "Apple AirPods Pro 2nd Gen", price: "750000", location: "Kampala", contact: "0705443399", description: "Active noise cancellation firmware matrix blocks ambient sound waves completely.", images: ["https://images.unsplash.com/photo-1588449668338-d15168822481?w=500", "", ""] },
     { id: "e12", status: "active", category: "electronics", title: "LG Smart Washing Machine", price: "2300000", location: "Wakiso", contact: "0782119955", description: "8KG drum capacity matrix loading gate, advanced automatic spinning cycles.", images: ["https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=500", "", ""] },
     { id: "e13", status: "active", category: "electronics", title: "Lenovo ThinkPad X1 Carbon", price: "1950000", location: "Kampala", contact: "0751662288", description: "Super lightweight executive computing device build, carbon fiber layout weave.", images: ["https://images.unsplash.com/photo-1496181130204-755241524eab?w=500", "", ""] },
-    { id: "e14", status: "active", category: "electronics", title: "DJI Mini 2 SE Drone Quad", price: "1800000", location: "Jinjal", contact: "0706771144", description: "Incredible stable flight navigation chip, captures glorious 2.7K aerial maps.", images: ["https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=500", "", ""] },
+    { id: "e14", status: "active", category: "electronics", title: "DJI Mini 2 SE Drone Quad", price: "1800000", location: "Jinja", contact: "0706771144", description: "Incredible stable flight navigation chip, captures glorious 2.7K aerial maps.", images: ["https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=500", "", ""] },
     { id: "e15", status: "active", category: "electronics", title: "Sony WH-1000XM4 Headphones", price: "950000", location: "Kampala", contact: "0775338800", description: "Premium sound processing framework overdrive, pristine state ear cushion cups.", images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500", "", ""] },
     { id: "e16", status: "active", category: "electronics", title: "HP Laserjet Pro M404dn", price: "880000", location: "Kampala", contact: "0754229911", description: "High volume monochrome laser printing engine block, fast double sided mechanics.", images: ["https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=500", "", ""] },
     { id: "e17", status: "active", category: "electronics", title: "iPad Pro 12.9 Inch (128GB)", price: "3100000", location: "Kampala", contact: "0789771133", description: "Liquid Retina XDR panel configuration screen setup with mini-LED backlights.", images: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500", "", ""] },
@@ -117,28 +117,40 @@ const ADMIN_PASSWORD = "27270";
 // ======================================================
 function attachRealtimeDatabaseListener() {
     db.collection("ads").onSnapshot((snapshot) => {
-        // Clear dynamically submitted documents to rebuild fresh arrays, keeping local hardcoded templates intact
-        structuralDatabase = structuralDatabase.filter(item => item.id.startsWith('p') || item.id.startsWith('v') || item.id.startsWith('r') || item.id.startsWith('e'));
+        // Safe Memory Separation: Re-isolate hardcoded local items so snapshot drops never erase them
+        structuralDatabase = structuralDatabase.filter(item => 
+            typeof item.id === 'string' && (
+                item.id.startsWith('p') || 
+                item.id.startsWith('v') || 
+                item.id.startsWith('r') || 
+                item.id.startsWith('e')
+            )
+        );
         
+        // Append all incoming online submissions directly from the live Firestore cluster
         snapshot.forEach((doc) => {
             const data = doc.data();
             if (data) {
-                structuralDatabase.push({
-                    id: doc.id,
-                    status: data.status || "pending",
-                    category: data.category || "phones",
-                    title: data.title || "Untitled Item",
-                    price: data.price || "0",
-                    location: data.location || "Unknown",
-                    contact: data.contact || "",
-                    description: data.description || "",
-                    images: data.images || ["", "", ""],
-                    payeeName: data.payeeName || "Anonymous",
-                    transactionId: data.transactionId || "N/A"
-                });
+                // Prevent duplicate tracking artifacts
+                if (!structuralDatabase.some(existingItem => existingItem.id === doc.id)) {
+                    structuralDatabase.push({
+                        id: doc.id,
+                        status: data.status || "pending",
+                        category: data.category || "phones",
+                        title: data.title || "Untitled Item",
+                        price: String(data.price || "0"),
+                        location: data.location || "Unknown",
+                        contact: data.contact || "",
+                        description: data.description || "",
+                        images: data.images || ["", "", ""],
+                        payeeName: data.payeeName || "Anonymous",
+                        transactionId: data.transactionId || "N/A"
+                    });
+                }
             }
         });
 
+        // Push updates to UI immediately
         renderAds();
         renderAdminDashboard();
     }, (error) => {
@@ -147,6 +159,7 @@ function attachRealtimeDatabaseListener() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Ignite listeners immediately
     attachRealtimeDatabaseListener();
 
     // --- Banner Carousels Slideshow Logic ---
@@ -343,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             let formattedPrice = item.price;
             if(!String(formattedPrice).includes(",")) {
-                formattedPrice = Number(formattedPrice.replace(/[^0-9]/g, '')).toLocaleString();
+                formattedPrice = Number(String(formattedPrice).replace(/[^0-9]/g, '')).toLocaleString();
             }
 
             adCard.innerHTML = `
@@ -367,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let detailPriceFormatted = item.price;
         if(!String(detailPriceFormatted).includes(",")) {
-            detailPriceFormatted = Number(detailPriceFormatted.replace(/[^0-9]/g, '')).toLocaleString();
+            detailPriceFormatted = Number(String(detailPriceFormatted).replace(/[^0-9]/g, '')).toLocaleString();
         }
         document.getElementById('detailPrice').innerText = `UGX ${detailPriceFormatted}`;
         document.getElementById('detailLocation').innerText = item.location;
@@ -471,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pendingItems.forEach(item => {
             let adminPrice = item.price;
             if(!String(adminPrice).includes(",")) {
-                adminPrice = Number(adminPrice.replace(/[^0-9]/g, '')).toLocaleString();
+                adminPrice = Number(String(adminPrice).replace(/[^0-9]/g, '')).toLocaleString();
             }
 
             tableHtml += `
