@@ -100,7 +100,10 @@ if (!structuralDatabase || structuralDatabase.length === 0) {
 let currentFilter = "all";
 let searchQuery = "";
 let calculatedFee = 3000;
-let isGoogleUserLoggedIn = false;
+
+// PERSIST GOOGLE SIGN-IN STATUS SO REFRESHING DOES NOT LOG USERS OUT
+let isGoogleUserLoggedIn = localStorage.getItem('isGoogleUserLoggedIn') === 'true';
+
 const ADMIN_PASSWORD = "27270";
 
 // HELPER FUNCTION TO SAVE ANY DATA STATE CHANGES
@@ -152,6 +155,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const goToDetailsBtn = document.getElementById('goToDetailsBtn');
     const submitPaymentBtn = document.getElementById('submitPaymentBtn');
 
+    // INITIAL REFRESH CHECK: Update Google button styling if user was previously logged in
+    if (isGoogleUserLoggedIn) {
+        googleAuthBtn.innerHTML = `<i class="fas fa-user-circle"></i> Google Account Connected`;
+        googleAuthBtn.classList.add('logged-in');
+    }
+
     renderAds();
     setupCategoryFilters();
     setupSearchFunctionality();
@@ -163,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     googleAuthBtn.addEventListener('click', () => {
         if (isGoogleUserLoggedIn) {
             isGoogleUserLoggedIn = false;
+            localStorage.setItem('isGoogleUserLoggedIn', 'false'); // Save logged out state
             googleAuthBtn.innerHTML = `<i class="fab fa-google"></i> Sign In with Google`;
             googleAuthBtn.classList.remove('logged-in');
             alert("Signed out from Google Account.");
@@ -175,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     confirmGoogleLoginBtn.addEventListener('click', () => {
         isGoogleUserLoggedIn = true;
+        localStorage.setItem('isGoogleUserLoggedIn', 'true'); // Save login state permanently
         googleAuthBtn.innerHTML = `<i class="fas fa-user-circle"></i> Google Account Connected`;
         googleAuthBtn.classList.add('logged-in');
         googleAuthModal.classList.remove('active');
@@ -251,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
         searchBtn.addEventListener('click', () => { searchQuery = searchInput.value.toLowerCase().trim(); renderAds(); });
     }
 
-    // Fixed setup Category filter elements safely 
     function setupCategoryFilters() {
         const categories = document.querySelectorAll('.cat-card');
         categories.forEach(card => {
@@ -364,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         structuralDatabase.unshift(verificationPayload);
-        saveDatabaseToStorage(); // Save payload locally immediately
+        saveDatabaseToStorage();
         
         alert(`📥 Submission Logged under review!\n\nOnce approved by admin, your ad goes live.`);
         document.getElementById('adForm').reset();
@@ -425,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = structuralDatabase.find(p => p.id === id);
         if (item) {
             item.status = "active";
-            saveDatabaseToStorage(); // Persist approval change permanently
+            saveDatabaseToStorage();
             alert(`✅ "${item.title}" has been verified and published live successfully!`);
             renderAdminDashboard();
             renderAds();
